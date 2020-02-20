@@ -1,14 +1,6 @@
 const con = require('../configs/mysql')
 
 module.exports = {
-    buyer: (idBuyer) => {
-        return new Promise((resolve, reject) => {
-            con.query(`INSERT INTO purchase SET idBuyer=${idBuyer}, totalPayment=0`, (error, result) => {
-                if (error) reject(new Error(error))
-                resolve(result)
-            })
-        })
-    },
     buy: (data, a) => {
         return new Promise((resolve, reject) => {
             con.query(`SELECT * FROM product WHERE id= ${data.productId}`, (error, result) => {
@@ -28,15 +20,6 @@ module.exports = {
                     })
                 } else reject(new Error(error))
             })
-        })
-    },
-    tPrice: (idBuyer, date) => {
-        return new Promise((resolve, reject) => {
-            con.query(`SELECT sum(price) as tPrice FROM purchase_detail WHERE idBuyer=${idBuyer}`,
-                (error, result) => {
-                    if (error) reject(new Error(error))
-                    resolve(result[0].tPrice)
-                })
         })
     }
 }

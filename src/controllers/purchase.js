@@ -12,7 +12,6 @@ module.exports = {
                 date_added: new Date()
             }
 
-            // await models.buyer(buy.idBuyer)
             var a = 0
             const result = await buy.products.map(e => {
                 const data = {
@@ -25,7 +24,7 @@ module.exports = {
                 a++
             })
 
-            helpers.response(res, 200, 'terima kasih')
+            helpers.response(res, 200, 'terima kasih telah berbelanja!')
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(404, 'your request not found')
