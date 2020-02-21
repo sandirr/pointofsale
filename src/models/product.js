@@ -1,17 +1,18 @@
 const con = require('../configs/mysql')
 
 module.exports = {
-    getAll: (limit, activePage, searchName, sortBy, sort) => {
+    getAll: (searchName, pagination) => {
         return new Promise((resolve, reject) => {
             const totalData = con.query('SELECT count(*) FROM product')
             //   const totalPages = Math.ceil(totalData / limit)
-            const firstData = ((limit * activePage) - limit)
+            const firstData = ((pagination.limit * pagination.activePage) - pagination.limit)
             con.query(`SELECT p.id, p.name, p.description, p.image, tc.name as category, p.stock, p.price, p.date_added, p.date_updated FROM product p 
             LEFT JOIN tabel_category tc ON p.category = tc.id
             WHERE p.name LIKE '%${searchName}%' 
-            ORDER BY ${sortBy} ${sort}
-            LIMIT ${firstData},${limit}`, (error, result) => {
+            ORDER BY ${pagination.by} ${pagination.sort}
+            LIMIT ${firstData},${pagination.limit}`, (error, result) => {
                 if (error) reject(new Error(error))
+                console.log('Get data from database')
                 resolve(result)
             })
         })
@@ -22,6 +23,7 @@ module.exports = {
             LEFT JOIN tabel_category tc ON p.category = tc.id 
             WHERE p.id = ?`, productId, (error, result) => {
                 if (error) reject(new Error(error))
+                console.log('Get data from database')
                 resolve(result)
             })
         })

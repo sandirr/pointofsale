@@ -2,6 +2,7 @@ const models = require('../models/product')
 const uniqid = require('uniqid')
 const helpers = require('../helpers')
 const { PORT, host } = require('../configs')
+const redisCache = require('../helpers/redisCache')
 
 module.exports = {
     getAll: async (req, res) => {
@@ -9,10 +10,23 @@ module.exports = {
             const limit = req.query.limit || 25
             const activePage = req.query.page || 1
             const searchName = req.query.name || ''
-            const sortBy = req.query.by || 'id'
+            const by = req.query.by || 'id'
             const sort = req.query.sort || 'ASC'
-            const result = await models.getAll(limit, activePage, searchName, sortBy, sort)
-            helpers.response(res, 200, result)
+
+            const pagination = {
+                limit, activePage, by, sort
+            }
+
+            const key = `get-all-product-${searchName}-${pagination}`
+            const resultCache = await redisCache.get(key)
+
+            if (resultCache) helpers.response(res, 200, resultCache)
+
+            if (resultCache === null) {
+                const result = await models.getAll(searchName, pagination)
+                await redisCache.set(key, result)
+                helpers.response(res, 200, result)
+            }
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Not Found!')
@@ -21,8 +35,16 @@ module.exports = {
     detailProduct: async (req, res) => {
         try {
             const productId = req.params.productId
-            const result = await models.detailProduct(productId)
-            helpers.response(res, 200, result)
+
+            const key = `get-detail-product-${productId}`
+            const resultCache = await redisCache.get(key)
+            if (resultCache) helpers.response(res, 200, resultCache)
+
+            if (resultCache === null) {
+                const result = await models.detailProduct(productId)
+                await redisCache.set(key, result)
+                helpers.response(res, 200, result)
+            }
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Internal server error!')
@@ -64,7 +86,10 @@ module.exports = {
                 date_updated: new Date()
             }
 
+            const key = `get-all-product`
+
             const result = await models.addProduct(data)
+            await redisCache.del(key)
             helpers.response(res, 200, result)
         } catch (error) {
             console.log(error)
@@ -106,7 +131,9 @@ module.exports = {
                 date_updated: new Date()
             }
             const productId = req.params.productId
+            const key = `get-detail-product-${productId}`
             const result = await models.updateProduct(data, productId)
+            await redisCache.set(key, result)
             helpers.response(res, 200, 'product has been updated')
         } catch (error) {
             console.log(error)
@@ -116,7 +143,9 @@ module.exports = {
     deleteProduct: async (req, res) => {
         try {
             const productId = req.params.productId
-            const result = await models.deleteProduct(productId)
+            const key = `get-all-product`
+            await models.deleteProduct(productId)
+            await redisCache.del(key)
             helpers.response(res, 200, 'product has been deleted')
         } catch (error) {
             console.log(error)

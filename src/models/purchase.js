@@ -26,13 +26,5 @@ module.exports = {
                 } else reject(new Error(error))
             })
         })
-    },
-    buyer: (idBuyer) => {
-        return new Promise((resolve, reject) => {
-            con.query(`SELECT sum(price) as tPrice FROM purchase_detail WHERE idBuyer=${idBuyer}`, (error, result) => {
-                if (error) reject(new Error(error))
-                resolve(result)
-            })
-        })
     }
 }

@@ -7,6 +7,16 @@ const fileUpload = require('express-fileupload')
 const cors = require('cors')
 
 app.use(cors())
+var whitelist = ['http://192.168.1.10:8181']
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
 app.listen(PORT, () => {
     console.log('server is running at port: ' + PORT)
 })

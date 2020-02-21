@@ -1,6 +1,5 @@
 const models = require('../models/purchase')
 const helpers = require('../helpers')
-const con = require('../configs/mysql')
 
 module.exports = {
     buy: async (req, res) => {
@@ -18,10 +17,10 @@ module.exports = {
                 const date = {
                     date_added: new Date()
                 }
-
-                var b = models.buy(data, a, date)
+                models.buy(data, a, date)
                 a++
             })
+
             helpers.response(res, 200, 'terima kasih telah berbelanja!')
         } catch (error) {
             console.log(error)
