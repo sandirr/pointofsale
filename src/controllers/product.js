@@ -3,30 +3,41 @@ const uniqid = require('uniqid')
 const helpers = require('../helpers')
 const { PORT, host } = require('../configs')
 const redisCache = require('../helpers/redisCache')
+const con = require('../configs/mysql')
 
 module.exports = {
     getAll: async (req, res) => {
         try {
-            const limit = req.query.limit || 25
+            const limit = req.query.limit || 9999
             const activePage = req.query.page || 1
             const searchName = req.query.name || ''
             const by = req.query.by || 'id'
             const sort = req.query.sort || 'ASC'
+            const category = req.query.category || ''
 
             const pagination = {
                 limit, activePage, by, sort
             }
 
-            const key = `get-all-product-${searchName}-${pagination}`
-            const resultCache = await redisCache.get(key)
+            const totalData = await models.countData(searchName, category)
+            const totalPages = Math.ceil(totalData / limit)
 
-            if (resultCache) helpers.response(res, 200, resultCache)
-
-            if (resultCache === null) {
-                const result = await models.getAll(searchName, pagination)
-                await redisCache.set(key, result)
-                helpers.response(res, 200, result)
+            const pager ={
+                totalPages
             }
+
+
+
+            // const key = `get-all-product-${searchName}-${pagination}`
+            // const resultCache = await redisCache.get(key)
+
+            // if (resultCache) helpers.response(res, 200, resultCache)
+
+            // if (resultCache === null) {
+                const result = await models.getAll(searchName, pagination, category)
+                // await redisCache.set(key, result)
+                helpers.response(res, 200, result, pager)
+            // }
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Not Found!')
@@ -36,15 +47,15 @@ module.exports = {
         try {
             const productId = req.params.productId
 
-            const key = `get-detail-product-${productId}`
-            const resultCache = await redisCache.get(key)
-            if (resultCache) helpers.response(res, 200, resultCache)
+            // const key = `get-detail-product-${productId}`
+            // const resultCache = await redisCache.get(key)
+            // if (resultCache) helpers.response(res, 200, resultCache)
 
-            if (resultCache === null) {
+            // if (resultCache === null) {
                 const result = await models.detailProduct(productId)
-                await redisCache.set(key, result)
+                // await redisCache.set(key, result)
                 helpers.response(res, 200, result)
-            }
+            // }
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Internal server error!')
@@ -86,11 +97,11 @@ module.exports = {
                 date_updated: new Date()
             }
 
-            const key = `get-all-product`
+            // const key = `get-all-product`
 
             const result = await models.addProduct(data)
-            await redisCache.del(key)
-            helpers.response(res, 200, result)
+            // await redisCache.del(key)
+            helpers.response(res, 200, 'product has been added')
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Not Found!')
@@ -99,7 +110,20 @@ module.exports = {
     updateProduct: async (req, res) => {
         try {
             if (!req.files || Object.keys(req.files).length === 0) {
-                return res.status(400).send('No files were uploaded.')
+                // const imageAccess = `http://${host}:${PORT}/images/${filename}`
+                const data = {
+                    name: req.body.name,
+                    description: req.body.description,
+                    category: req.body.category,
+                    price: req.body.price,
+                    stock: req.body.stock,
+                    date_updated: new Date()
+                }
+                const productId = req.params.productId
+                // const key = `get-detail-product-${productId}`
+                const result = await models.updateProduct(data, productId)
+                // await redisCache.set(key, result)
+                return helpers.response(res, 200, 'product has been updated')
             }
 
             const img = req.files.image
@@ -121,7 +145,7 @@ module.exports = {
             })
 
             const imageAccess = `http://${host}:${PORT}/images/${filename}`
-            data = {
+            const data = {
                 name: req.body.name,
                 description: req.body.description,
                 image: imageAccess,
@@ -131,9 +155,9 @@ module.exports = {
                 date_updated: new Date()
             }
             const productId = req.params.productId
-            const key = `get-detail-product-${productId}`
+            // const key = `get-detail-product-${productId}`
             const result = await models.updateProduct(data, productId)
-            await redisCache.set(key, result)
+            // await redisCache.set(key, result)
             helpers.response(res, 200, 'product has been updated')
         } catch (error) {
             console.log(error)
@@ -143,9 +167,9 @@ module.exports = {
     deleteProduct: async (req, res) => {
         try {
             const productId = req.params.productId
-            const key = `get-all-product`
+            // const key = `get-all-product`
             await models.deleteProduct(productId)
-            await redisCache.del(key)
+            // await redisCache.del(key)
             helpers.response(res, 200, 'product has been deleted')
         } catch (error) {
             console.log(error)

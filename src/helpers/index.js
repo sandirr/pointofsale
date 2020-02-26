@@ -14,10 +14,16 @@ module.exports = {
         }
     },
     response: (response, status, result, pagination) => {
-        const data = {}
+        var page = []
+        var data = {}
+
+        for (var i = 1; i <= pagination.totalPages; i++) {
+            page[i-1] = i
+        }
 
         data.status = status || 200
         data.result = result
+        data.totalPages = page
 
         return response.status(data.status).json(data)
     },

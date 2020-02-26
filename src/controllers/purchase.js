@@ -8,6 +8,7 @@ module.exports = {
             if (buy === undefined || buy === '') return console.log('Tidak ada data')
 
             var a = 0
+
             await buy.products.map(e => {
                 const data = {
                     idBuyer: buy.idBuyer,
