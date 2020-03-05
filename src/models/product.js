@@ -18,7 +18,7 @@ module.exports = {
             const firstData = ((pagination.limit * pagination.activePage) - pagination.limit)
             con.query(`SELECT p.id, p.name, p.description, p.image, tc.name as category, p.stock, p.price, p.date_added, p.date_updated FROM product p 
             LEFT JOIN tabel_category tc ON p.category = tc.id
-            WHERE p.name LIKE '%${searchName}%' AND tc.name LIKE '%${cat}%'
+            WHERE p.name LIKE '%${searchName}%' AND tc.name LIKE '%${cat}%' AND p.stock > 0
             ORDER BY ${pagination.by} ${pagination.sort}
             LIMIT ${firstData},${pagination.limit}`, (error, result) => {
                 if (error) reject(new Error(error))
@@ -40,7 +40,6 @@ module.exports = {
     },
     addProduct: (data) => {
         return new Promise((resolve, reject) => {
-            con.query('ALTER TABLE product AUTO_INCREMENT=0')
             con.query('INSERT INTO product SET ?', data, (error, result) => {
                 if (error) reject(new Error(error))
                 resolve(result)

@@ -3,6 +3,7 @@ const con = require('../configs/mysql')
 module.exports = {
     getAll: (searchName) => {
         return new Promise((resolve, reject) => {
+            con.query('ALTER TABLE tabel_category AUTO_INCREMENT=0')
             con.query(`SELECT * FROM tabel_category WHERE name LIKE '%${searchName}%'`, (error, result) => {
                 if (error) reject(new Error(error))
                 resolve(result)

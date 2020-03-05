@@ -5,10 +5,10 @@ const { authentication, authorization } = require('../helpers/auth')
 const { getAll, getDetail, addCategory, updateCategory, deleteCategory } = require('../controllers/category')
 
 Route
-    .get('/', authentication, authorization, getAll)
-    .get('/:catId', authentication, authorization, getDetail)
-    .post('/', authentication, authorization, addCategory)
-    .patch('/:catId', authentication, authorization, updateCategory)
-    .delete('/:catId', authentication, authorization, deleteCategory)
+    .get('/', getAll)
+    .get('/:catId', getDetail)
+    .post('/', addCategory)
+    .patch('/:catId', updateCategory)
+    .delete('/:catId', deleteCategory)
 
 module.exports = Route

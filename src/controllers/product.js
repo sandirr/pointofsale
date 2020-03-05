@@ -91,8 +91,8 @@ module.exports = {
                 description: req.body.description,
                 image: imageAccess,
                 category: req.body.category,
-                price: req.body.price,
                 stock: req.body.stock,
+                price: req.body.price,
                 date_added: new Date(),
                 date_updated: new Date()
             }
@@ -100,8 +100,9 @@ module.exports = {
             // const key = `get-all-product`
 
             const result = await models.addProduct(data)
-            // await redisCache.del(key)
-            helpers.response(res, 200, 'product has been added')
+            data.id = result.insertId
+            newData = await models.detailProduct(data.id)
+            helpers.response(res, 200, newData)
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Not Found!')
@@ -110,7 +111,6 @@ module.exports = {
     updateProduct: async (req, res) => {
         try {
             if (!req.files || Object.keys(req.files).length === 0) {
-                // const imageAccess = `http://${host}:${PORT}/images/${filename}`
                 const data = {
                     name: req.body.name,
                     description: req.body.description,
@@ -121,9 +121,11 @@ module.exports = {
                 }
                 const productId = req.params.productId
                 // const key = `get-detail-product-${productId}`
-                const result = await models.updateProduct(data, productId)
+                await models.updateProduct(data, productId)
+                const result = await models.detailProduct(productId)
+                const newData = result[0]
                 // await redisCache.set(key, result)
-                return helpers.response(res, 200, 'product has been updated')
+                return helpers.response(res, 200, newData)
             }
 
             const img = req.files.image
@@ -156,9 +158,11 @@ module.exports = {
             }
             const productId = req.params.productId
             // const key = `get-detail-product-${productId}`
-            const result = await models.updateProduct(data, productId)
+            await models.updateProduct(data, productId)
+            const result = await models.detailProduct(productId)
+            const newData = result[0]
             // await redisCache.set(key, result)
-            helpers.response(res, 200, 'product has been updated')
+            helpers.response(res, 200, newData)
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Not Found!')
@@ -170,7 +174,7 @@ module.exports = {
             // const key = `get-all-product`
             await models.deleteProduct(productId)
             // await redisCache.del(key)
-            helpers.response(res, 200, 'product has been deleted')
+            helpers.response(res, 200, productId)
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 404, 'Not Found!')

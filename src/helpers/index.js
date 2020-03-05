@@ -17,13 +17,16 @@ module.exports = {
         var page = []
         var data = {}
 
-        for (var i = 1; i <= pagination.totalPages; i++) {
-            page[i-1] = i
+        if(pagination){
+
+            for (var i = 1; i <= pagination.totalPages; i++) {
+                page[i-1] = i
+            }
+            data.totalPages = page
         }
 
         data.status = status || 200
         data.result = result
-        data.totalPages = page
 
         return response.status(data.status).json(data)
     },

@@ -1,8 +1,10 @@
 const express = require('express')
 const Route = express.Router()
-const { buy } = require('../controllers/purchase')
+const { buy, recap, detailPurchase } = require('../controllers/purchase')
 
 Route
     .post('/', buy)
+    .get('/', recap)
+    .get('/:idBuyer', detailPurchase)
 
 module.exports = Route

@@ -26,11 +26,14 @@ module.exports = {
     },
     addCategory: async (req, res) => {
         try {
+            console.log(req.body.name)
             data = {
                 name: req.body.name
             }
-            result = await models.addCategory(data)
-            helpers.response(res, 200, 'category has been added')
+            const result = await models.addCategory(data)
+            data.id=result.insertId
+            const newData = await models.getDetail(data.id)
+            helpers.response(res, 200, newData[0])
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 400, 'Data can`t send')
@@ -43,7 +46,8 @@ module.exports = {
                 name: req.body.name
             }
             result = await models.updateCategory(data, catId)
-            helpers.response(res, 200, 'category has been updated')
+            const newData = await models.getDetail(catId)
+            helpers.response(res, 200, newData[0])
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 400, 'Data can`t send')
@@ -52,8 +56,8 @@ module.exports = {
     deleteCategory: async (req, res) => {
         try {
             const catId = req.params.catId
-            result = await models.deleteCategory(catId)
-            helpers.response(res, 200, 'category has been deleted')
+            const result = await models.deleteCategory(catId)
+            helpers.response(res, 200, catId)
         } catch (error) {
             console.log(error)
             helpers.customErrorResponse(res, 500, 'Server error!')
