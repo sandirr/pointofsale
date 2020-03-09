@@ -14,6 +14,7 @@ module.exports = {
             const by = req.query.by || 'id'
             const sort = req.query.sort || 'ASC'
             const category = req.query.category || ''
+            const user = req.query.user || 'admin'
 
             const pagination = {
                 limit, activePage, by, sort
@@ -34,7 +35,7 @@ module.exports = {
             // if (resultCache) helpers.response(res, 200, resultCache)
 
             // if (resultCache === null) {
-                const result = await models.getAll(searchName, pagination, category)
+                const result = await models.getAll(searchName, pagination, category, user)
                 // await redisCache.set(key, result)
                 helpers.response(res, 200, result, pager)
             // }

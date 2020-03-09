@@ -39,6 +39,7 @@ module.exports = {
         }
 
         const emailValid = await userModel.checkEmail(data.email)
+        if(emailValid.length < 1) response.json({ error: 'Wrong Email' })
         const dataUser = emailValid[0]
         const hashPassword = helper.setPassword(data.password, dataUser.salt)
 

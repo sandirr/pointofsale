@@ -44,10 +44,13 @@ module.exports = {
                 resolve(result)
             })
         })
+    },
+    lastWeekRecap:()=>{
+        return new Promise((resolve, reject)=>{
+            con.query(`SELECT SUM(totalPayment) as "totalPayment", date_added FROM purchase GROUP BY date_added ORDER BY date_added DESC LIMIT 7`, (error, result)=>{
+                if(error) reject(new Error(error))
+                resolve(result)
+            })
+        })
     }
-
-
-
-
-
 }

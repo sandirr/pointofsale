@@ -1,14 +1,10 @@
 const express = require("express");
 const Route = express.Router();
 const {
-  buy,
-  recap,
-  detailPurchase
+  lastWeek
 } = require("../controllers/purchase");
 
 Route
-  .post("/", buy)
-  .get("/", recap)
-  .get("/:idBuyer", detailPurchase)
+  .get("/", lastWeek)
 
 module.exports = Route;
