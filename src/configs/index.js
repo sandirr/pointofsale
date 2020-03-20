@@ -9,7 +9,7 @@ module.exports = {
   },
   PORT: process.env.PORT,
   JWT_KEY: process.env.JWT_KEY,
-  host: process.env.HOST,
+  domain: process.env.DOMAIN,
   redis: {
     host: '127.0.0.1',
     port: 6379

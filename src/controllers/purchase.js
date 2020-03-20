@@ -1,5 +1,6 @@
 const models = require("../models/purchase");
 const helpers = require("../helpers");
+const uniqid = require("uniqid")
 
 module.exports = {
   buy: async (req, res) => {
@@ -8,10 +9,11 @@ module.exports = {
       if (buy === undefined || buy === "") return console.log("Tidak ada data");
 
       var a = 0;
-
+      const idBuyer = uniqid();
+      console.log(req.body)
       await buy.products.map(e => {
         const data = {
-          idBuyer: buy.idBuyer,
+          idBuyer: idBuyer,
           productId: e.productId,
           stock: e.quantity
         };

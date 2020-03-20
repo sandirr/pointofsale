@@ -1,7 +1,7 @@
 const models = require('../models/product')
 const uniqid = require('uniqid')
 const helpers = require('../helpers')
-const { PORT, host } = require('../configs')
+const { PORT, domain } = require('../configs')
 const redisCache = require('../helpers/redisCache')
 const con = require('../configs/mysql')
 
@@ -64,9 +64,9 @@ module.exports = {
     },
     addProduct: async (req, res) => {
         try {
-            if (!req.files || Object.keys(req.files).length === 0) {
-                return res.status(400).send('No files were uploaded.')
-            }
+            // if (!req.files || Object.keys(req.files).length === 0) {
+            //     return helpers.response(res, 200, "no image selected")
+            // }
 
             const img = req.files.image
             const imageArr = img.name.split('.')
@@ -75,7 +75,7 @@ module.exports = {
 
             if (imageExt != 'png' && imageExt != 'jpg' && imageExt != 'jpeg' && imageExt != 'gif') { return res.json({ message: 'Not allowed upload another file except image' }) }
 
-            if (img.size > 5000000) { return res.json({ message: 'Not allowed upload more than 5MB' }) }
+            if (img.size > (1024*1024*5)) { return res.json({ message: 'Not allowed upload more than 5MB' }) }
 
             uploadPath = __dirname + '/../views/assets/images/' + filename
 
@@ -86,7 +86,7 @@ module.exports = {
                 console.log('Upload file success')
             })
 
-            const imageAccess = `http://${host}:${PORT}/images/${filename}`
+            const imageAccess = `http://${domain}:${PORT}/images/${filename}`
             data = {
                 name: req.body.name,
                 description: req.body.description,
@@ -147,7 +147,7 @@ module.exports = {
                 console.log('Upload file success')
             })
 
-            const imageAccess = `http://${host}:${PORT}/images/${filename}`
+            const imageAccess = `http://${domain}:${PORT}/images/${filename}`
             const data = {
                 name: req.body.name,
                 description: req.body.description,
