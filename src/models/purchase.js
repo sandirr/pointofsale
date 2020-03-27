@@ -37,7 +37,7 @@ module.exports = {
     },
     detailPurchase:(idBuyer)=>{
         return new Promise((resolve, reject)=>{
-            con.query(`SELECT product.name as name, pd.stock as Qty, pd.price as Price FROM purchase_detail pd
+            con.query(`SELECT product.name as name, pd.stock as Qty, pd.price as Price, idBuyer as id FROM purchase_detail pd
                 LEFT JOIN product on pd.productId = product.id
                 WHERE pd.idBuyer = '${idBuyer}'`, (error, result)=>{
                 if(error) reject(new Error(error))
