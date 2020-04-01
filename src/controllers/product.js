@@ -86,7 +86,7 @@ module.exports = {
                 console.log('Upload file success')
             })
 
-            const imageAccess = `http://${domain}:${PORT}/images/${filename}`
+            const imageAccess = `images/${filename}`
             data = {
                 name: req.body.name,
                 description: req.body.description,
@@ -147,7 +147,7 @@ module.exports = {
                 console.log('Upload file success')
             })
 
-            const imageAccess = `http://${domain}:${PORT}/images/${filename}`
+            const imageAccess = `images/${filename}`
             const data = {
                 name: req.body.name,
                 description: req.body.description,
