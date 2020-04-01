@@ -1,4 +1,5 @@
 # Point of Sale
+
 <hr id='#'>
 <h2>Table of Contents</h2>
 <ul>
@@ -32,8 +33,8 @@
 <h3 id='clone'>Clone</h3>
 
 ```bash
-$ git clone https://github.com/sandirr/task-pos
-$ cd task-pos
+$ git clone https://github.com/sandirr/pointofsale
+$ cd pointofsale
 $ npm install
 ```
 
@@ -67,4 +68,3 @@ $ npm start
 <h2 id='license'>License</h2>
 
 &copy;<a href='https://github.com/sandirr/'>Andi Irsandi</a>
-
