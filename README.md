@@ -1,4 +1,4 @@
-# Point of Sale
+# Point of Sale (Irsandi Cafe)
 
 <hr id='#'>
 <h2>Table of Contents</h2>
