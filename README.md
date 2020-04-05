@@ -1,5 +1,11 @@
 # Point of Sale (Irsandi Cafe)
 
+## PUBLIC URI : http://54.196.30.0 
+
+![](https://img.shields.io/badge/Code%20Style-Standard-yellow.svg)
+![](https://img.shields.io/badge/Dependencies-Express-green.svg)
+![](https://img.shields.io/badge/License-Beerware-yellowgreen.svg)
+
 <hr id='#'>
 <h2>Table of Contents</h2>
 <ul>
